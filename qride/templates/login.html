@@ -107,7 +107,7 @@ https://templatemo.com/tm-590-topic-listing
                                 </ol>
                             </nav>
 
-                            <h2 class="text-white">Registration Form</h2>
+                            <h2 class="text-white">Login Form</h2>
                         </div>
 
                     </div>
@@ -119,26 +119,17 @@ https://templatemo.com/tm-590-topic-listing
                     <div class="row">
 
                         <div class="col-lg-6 col-12 mx-auto">
-                            
-                            <form method="POST" action="{% url 'register' %}" class="custom-form contact-form" role="form">
+
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                            {% endif %}
+
+
+                            <form method="POST" action="{% url 'login' %}" class="custom-form contact-form" role="form">
     {% csrf_token %}
     <div class="row">
-        <!-- Name -->
-        <div class="col-lg-12 col-12">
-            <div class="form-floating mb-3">
-                <input type="text" name="name" id="name" class="form-control" placeholder="Name" required>
-                <label for="name">Full Name</label>
-            </div>
-        </div>
-
-        <!-- Phone -->
-        <div class="col-lg-12 col-12">
-            <div class="form-floating mb-3">
-                <input type="number" name="phone" id="phone" class="form-control" placeholder="Phone" required>
-                <label for="phone">Phone</label>
-            </div>
-        </div>
-
         <!-- Email -->
         <div class="col-lg-12 col-12">
             <div class="form-floating mb-3">
@@ -155,33 +146,15 @@ https://templatemo.com/tm-590-topic-listing
             </div>
         </div>
 
-        <!-- Confirm Password -->
-        <div class="col-lg-12 col-12">
-            <div class="form-floating mb-3">
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm Password" required>
-                <label for="confirm_password">Confirm Password</label>
-            </div>
-        </div>
-
-        <!-- Role Selection -->
-        <div class="col-lg-12 col-12">
-            <div class="form-floating mb-3">
-                <select name="role" id="role" class="form-select" required>
-                    <option value="" disabled selected>Select Role</option>
-                    <option value="passenger">Passenger</option>
-                    <option value="student">Student</option>
-                    <option value="bus_operator">Bus Operator</option>
-                </select>
-                
-            </div>
-        </div>
+       
 
         <!-- Submit -->
         <div class="col-lg-4 col-12 mx-auto">
-            <button type="submit" class="form-control btn btn-primary">Register</button>
+            <button type="submit" class="form-control btn btn-primary">Login</button>
         </div>
     </div>
 </form>
+
 
                         </div>
 
