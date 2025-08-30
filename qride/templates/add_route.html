@@ -1,0 +1,25 @@
+<h2>Add New Route</h2>
+<form method="POST">
+    {% csrf_token %}
+    
+    <label for="start_stop">Starting Stop:</label>
+    <input type="text" name="start_stop" required><br><br>
+
+    <label for="end_stop">Ending Stop:</label>
+    <input type="text" name="end_stop" required><br><br>
+
+    <label for="distance">Distance (in km):</label>
+    <input type="number" step="0.1" name="distance" required><br><br>
+
+    <label for="fare">Fare:</label>
+    <input type="number" step="0.1" name="fare" required><br><br>
+
+    <label for="bus">Select Bus:</label>
+    <select name="bus" required>
+        {% for b in buses %}
+            <option value="{{ b.id }}">{{ b.bus_number }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Add Route</button>
+</form>

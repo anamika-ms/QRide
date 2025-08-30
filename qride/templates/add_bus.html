@@ -1,0 +1,14 @@
+<h2>Add New Bus</h2>
+<form method="POST">
+    {% csrf_token %}
+    <label for="bus_number">Bus Number:</label>
+    <input type="text" name="bus_number" required><br><br>
+
+    <label for="seat_capacity">Capacity:</label>
+    <input type="number" name="seat_capacity" required><br><br>
+
+    <label for="bus_route">Bus Route:</label>
+    <input type="text" name="bus_route" required><br><br>
+
+    <button type="submit">Add Bus</button>
+</form>
