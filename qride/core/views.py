@@ -4,9 +4,6 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
 
-
-# Create your views here.
-
 def index(request):
     return render(request, 'index.html')
 
@@ -31,6 +28,7 @@ def bus_home(request):
     buses = bus.objects.filter(operator=user)
     return render(request, 'bus_home.html', {'buses': buses})
 
+# Registration Fn (Users)
 
 def register(request):
     if request.method == "POST":
@@ -70,7 +68,7 @@ def register(request):
 
     return render(request, 'registration.html')
 
-
+# Login Fn (Users)
 
 def login_view(request):
     if request.method == 'POST':
@@ -98,7 +96,7 @@ def login_view(request):
     
     return render(request, 'login.html')
 
-
+# Add Bus Fn (Operator)
 
 def add_bus(request):
     # Check if user is logged in
@@ -138,6 +136,7 @@ def add_bus(request):
 
     return render(request, 'add_bus.html')
 
+# Add Route Fn (Operator)
 
 def add_route(request):
     # Check if user is logged in
@@ -179,6 +178,8 @@ def add_route(request):
         return redirect('bus_home')
 
     return render(request, 'add_route.html', {'buses': buses})
+
+# View Route (Operator)
 
 def view_routes(request):
     routes = route.objects.all().order_by('-created_at')  # Latest first

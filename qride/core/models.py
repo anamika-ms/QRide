@@ -1,8 +1,8 @@
 from django.db import models
 from decimal import Decimal
-import qrcode
 from io import BytesIO
 from django.core.files import File
+import qrcode
 
 class registration(models.Model):
     ROLE_CHOICES = [
