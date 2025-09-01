@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Bus Operator</title>
+        <title>Operator</title>
 
         <!-- CSS FILES -->        
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,7 @@ https://templatemo.com/tm-590-topic-listing
 -->
     </head>
     
-    <body class="topics-listing-page" id="top">
+    <body id="top">
 
         <main>
 
@@ -76,7 +76,7 @@ https://templatemo.com/tm-590-topic-listing
                                 <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
 
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                    <li><a class="dropdown-item active" href="/listing">Topics Listing</a></li>
+                                    <li><a class="dropdown-item" href="/listing">Topics Listing</a></li>
 
                                     <li><a class="dropdown-item" href="/contact">Contact Form</a></li>
                                 </ul>
@@ -89,148 +89,79 @@ https://templatemo.com/tm-590-topic-listing
                     </div>
                 </div>
             </nav>
-
+            
 
             <header class="site-header d-flex flex-column justify-content-center align-items-center">
                 <div class="container">
-                    <div class="row align-items-center">
+                    <div class="row justify-content-center align-items-center">
 
-                        <div class="col-lg-5 col-12">
+                        <div class="col-lg-5 col-12 mb-5">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/index">Homepage</a></li>
 
-                                    <li class="breadcrumb-item active" aria-current="page">Topics Listing</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Web Design</li>
                                 </ol>
                             </nav>
 
-                            <h2 class="text-white">Topics Listing</h2>
+                            <h2 class="text-white">Introduction to <br> Web Design 101</h2>
+
+                            <div class="d-flex align-items-center mt-5">
+                                <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+
+                                <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                            </div>
                         </div>
-<!-- {% for bus in buses %}
-<tr>
-    <td>{{ bus.bus_number }}</td>
-    <td>
-        {% if bus.qr_code %}
-            <img src="{{ bus.qr_code.url }}" alt="QR Code" width="100">
-        {% else %}
-            No QR generated
-        {% endif %}
-    </td>
-</tr>
-{% endfor %} -->
+
+                        <div class="col-lg-5 col-12">
+                            <div class="topics-detail-block bg-white shadow-lg">
+                                {% for bus in buses %}
+                                <tr><center>
+                                    <td>
+                                        {% if bus.qr_code %}
+                                        <img src="{{ bus.qr_code.url }}" class="topics-detail-block-image img-fluid">
+                                        {% else %}
+                                            No QR generated
+                                        {% endif %}
+                                    </td>
+                                    <td>Bus Number : {{ bus.bus_number }}</td><br>
+                                    <td>Bus Route : {{ bus.bus_route }}</td></center><br>
+                                </tr>
+                                {% endfor %}
+                            </div>
+                        </div>
 
                     </div>
                 </div>
             </header>
 
 
-            <section class="section-padding">
+            <section class="topics-detail-section section-padding" id="topics-detail">
                 <div class="container">
                     <div class="row">
 
-                        <div class="col-lg-12 col-12 text-center">
-                            <h3 class="mb-4">Popular Topics</h3>
-                        </div>
-   
+                        <div class="col-lg-8 col-12 m-auto">
+                            <h3 class="mb-4">Introduction to Web Design</h3>
 
-                        <div class="col-lg-8 col-12 mt-3 mx-auto">
-                            <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
-                                <div class="d-flex">
-                                    {% for bus in buses %}
-                                    <!-- <p>{{ bus.bus_number }} - {{ bus.bus_route }}</p> -->
-                                    {% if bus.qr_code %}
-                                    <img src="{{ bus.qr_code.url }}" alt="QR Code"  class="custom-block-image img-fluid" alt="">
-                                    {% else %}
-                                    <p>No QR generated yet</p>
-                                    {% endif %}
-                                    {% endfor %}
-                                    <div class="custom-block-topics-listing-info d-flex">
-                                        <div>
-                                            <h5 class="mb-2">Web Design</h5>
+                            <p>So how can you stand out, do something unique and interesting, build an online business, and get paid enough to change life. Please visit TemplateMo website to download free website templates.</p>
 
-                                            <p class="mb-0">Topic Listing includes home, listing, detail and contact pages. Feel free to modify this template for your custom websites.</p>
+                            <p><strong>There are so many ways to make money online</strong>. Below are several platforms you can use to find success. Keep in mind that there is no one path everyone can take. If that were the case, everyone would have a million dollars.</p>
 
-                                            <a href="/details" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
-                                        </div>
+                            <blockquote>
+                                Freelancing your skills isn’t going to make you a millionaire overnight.
+                            </blockquote>
 
-                                        <span class="badge bg-design rounded-pill ms-auto">14</span>
-                                    </div>
+                            <div class="row my-4">
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <img src="{% static 'images/businesswoman-using-tablet-analysis.jpg' %}" class="topics-detail-block-image img-fluid">
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0 mt-md-0">
+                                    <img src="{% static 'images/colleagues-working-cozy-office-medium-shot.jpg' %}" class="topics-detail-block-image img-fluid">
                                 </div>
                             </div>
 
-                            <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
-                                <div class="d-flex">
-                                    <img src="{% static 'images/topics/undraw_online_ad_re_ol62.png' %}" class="custom-block-image img-fluid" alt="">
-
-                                    <div class="custom-block-topics-listing-info d-flex">
-                                        <div>
-                                            <h5 class="mb-2">Advertising</h5>
-
-                                            <p class="mb-0">Visit TemplateMo website to download free CSS templates. Lorem ipsum dolor, sit amet consectetur adipisicing elit animi necessitatibus</p>
-
-                                            <a href="/details" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
-                                        </div>
-
-                                        <span class="badge bg-advertising rounded-pill ms-auto">30</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
-                                <div class="d-flex">
-                                    <img src="{% static 'images/topics/undraw_Podcast_audience_re_4i5q.png' %}" class="custom-block-image img-fluid" alt="">
-
-                                    <div class="custom-block-topics-listing-info d-flex">
-                                        <div>
-                                            <h5 class="mb-2">Podcast</h5>
-
-                                            <p class="mb-0">Lorem ipsum dolor, sit amet consectetur adipisicing elit animi necessitatibus</p>
-
-                                            <a href="/details" class="btn custom-btn mt-3 mt-lg-4">Learn More</a>
-                                        </div>
-
-                                        <span class="badge bg-music rounded-pill ms-auto">20</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-12">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center mb-0">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">Prev</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="page-item active" aria-current="page">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">4</a>
-                                    </li>
-
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">5</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">Next</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <p>Most people start with freelancing skills they already have as a side hustle to build up income. This extra cash can be used for a vacation, to boost up savings, investing, build business.</p>
                         </div>
 
                     </div>
@@ -240,78 +171,30 @@ https://templatemo.com/tm-590-topic-listing
 
             <section class="section-padding section-bg">
                 <div class="container">
-                    <div class="row">
+                    <div class="row justify-content-center">
 
-                        <div class="col-lg-12 col-12">
-                            <h3 class="mb-4">Trending Topics</h3>
+                        <div class="col-lg-5 col-12">
+                            <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
                         </div>
 
-                        <div class="col-lg-6 col-md-6 col-12 mt-3 mb-4 mb-lg-0">
-                            <div class="custom-block bg-white shadow-lg">
-                                <a href="/details">
-                                    <div class="d-flex">
-                                        <div>
-                                            <h5 class="mb-2">Investment</h5>
+                        <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
+                            <form class="custom-form subscribe-form" action="#" method="post" role="form">
+                                <h4 class="mb-4 pb-2">Get Newsletter</h4>
 
-                                            <p class="mb-0">Lorem Ipsum dolor sit amet consectetur</p>
-                                        </div>
+                                <input type="email" name="subscribe-email" id="subscribe-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email Address" required="">
 
-                                        <span class="badge bg-finance rounded-pill ms-auto">30</span>
-                                    </div>
-
-                                    <img src="{% static 'images/topics/undraw_Finance_re_gnv2.png' %}" class="custom-block-image img-fluid" alt="">
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-12 mt-lg-3">
-                            <div class="custom-block custom-block-overlay">
-                                <div class="d-flex flex-column h-100">
-                                    <img src="{% static 'images/businesswoman-using-tablet-analysis.jpg' %}" class="custom-block-image img-fluid" alt="">
-
-                                    <div class="custom-block-overlay-text d-flex">
-                                        <div>
-                                            <h5 class="text-white mb-2">Finance</h5>
-
-                                            <p class="text-white">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sint animi necessitatibus aperiam repudiandae nam omnis</p>
-
-                                            <a href="/details" class="btn custom-btn mt-2 mt-lg-3">Learn More</a>
-                                        </div>
-
-                                        <span class="badge bg-finance rounded-pill ms-auto">25</span>
-                                    </div>
-
-                                    <div class="social-share d-flex">
-                                        <p class="text-white me-4">Share:</p>
-
-                                        <ul class="social-icon">
-                                            <li class="social-icon-item">
-                                                <a href="#" class="social-icon-link bi-twitter"></a>
-                                            </li>
-
-                                            <li class="social-icon-item">
-                                                <a href="#" class="social-icon-link bi-facebook"></a>
-                                            </li>
-
-                                            <li class="social-icon-item">
-                                                <a href="#" class="social-icon-link bi-pinterest"></a>
-                                            </li>
-                                        </ul>
-
-                                        <a href="#" class="custom-icon bi-bookmark ms-auto"></a>
-                                    </div>
-
-                                    <div class="section-overlay"></div>
+                                <div class="col-lg-12 col-12">
+                                    <button type="submit" class="form-control">Subscribe</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
 
                     </div>
                 </div>
             </section>
         </main>
-
-		<footer class="site-footer section-padding">
+		
+        <footer class="site-footer section-padding">
             <div class="container">
                 <div class="row">
 

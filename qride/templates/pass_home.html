@@ -107,9 +107,66 @@ https://templatemo.com/tm-590-topic-listing
                             <h2 class="text-white">Introduction to <br> Web Design 101</h2>
 
                             <div class="d-flex align-items-center mt-5">
-                                <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+                                <!-- <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
 
-                                <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                                <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a> -->
+                              <!-- Scan QR Button -->
+<button onclick="startScanner()" class="btn custom-btn custom-border-btn smoothscroll me-4">
+    Scan QR
+</button>
+
+<!-- QR Scanner Container -->
+<div id="qr-reader" style="width:300px; margin-top:20px; display:none;"></div>
+
+<!-- Include HTML5 QR Code Library -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+    let html5QrCode;
+    let isScannerRunning = false;
+
+    function startScanner() {
+        const qrReaderElement = document.getElementById("qr-reader");
+
+        // Show the QR container
+        qrReaderElement.style.display = "block";
+
+        if (!isScannerRunning) {
+            html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" }, // Back camera for mobile
+                {
+                    fps: 10, // Frames per second
+                    qrbox: { width: 250, height: 250 } // Scanning box size
+                },
+                (decodedText) => {
+                    console.log("QR Code detected:", decodedText);
+
+                    // Stop scanning after successful scan
+                    html5QrCode.stop().then(() => {
+                        isScannerRunning = false;
+                        qrReaderElement.style.display = "none";
+
+                        // Redirect to select destination page with bus_id
+                        window.location.href = "/select-destination/?bus_id=" + encodeURIComponent(decodedText);
+                    }).catch((err) => {
+                        console.error("Error stopping scanner:", err);
+                    });
+                },
+                (errorMessage) => {
+                    // Ignore scanning errors
+                }
+            ).then(() => {
+                isScannerRunning = true;
+            }).catch((err) => {
+                console.error("Unable to start scanning:", err);
+                alert("Unable to access the camera. Please allow camera permissions.");
+            });
+        }
+    }
+</script>
+
                             </div>
                         </div>
 

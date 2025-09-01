@@ -4,6 +4,8 @@ from io import BytesIO
 from django.core.files import File
 import qrcode
 
+
+# User Registration DB
 class registration(models.Model):
     ROLE_CHOICES = [
         ('Passenger', 'Passenger'),
@@ -20,7 +22,9 @@ class registration(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.role})"
-    
+
+
+# Bus Details DB
 class bus(models.Model):
     operator = models.ForeignKey(registration, on_delete=models.CASCADE, limit_choices_to={'role': 'Operator'})
     phone = models.CharField(max_length=15)
@@ -30,7 +34,6 @@ class bus(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     qr_code = models.ImageField(upload_to='bus_qrcodes/', blank=True, null=True)
     
-
     def save(self, *args, **kwargs):
         creating = self._state.adding  # True if this is a new object
         super().save(*args, **kwargs)  # Save first to get ID
@@ -47,7 +50,7 @@ class bus(models.Model):
         return f"{self.bus_number} - {self.bus_route}"
 
 
-
+# Route Details DB
 class route(models.Model):
     bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='routes')
     operator = models.CharField(max_length=100)
