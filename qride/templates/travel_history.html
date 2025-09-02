@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Select Destination</title>
+        <title>Travel History</title>
 
         <!-- CSS FILES -->        
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,38 +53,38 @@ https://templatemo.com/tm-590-topic-listing
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-5 me-lg-auto">
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="/index">Home</a>
+                                <!-- <a class="nav-link click-scroll" href="/index">Home</a> -->
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="/index">Browse Topics</a>
+                                <!-- <a class="nav-link click-scroll" href="/index">Browse Topics</a> -->
                             </li>
     
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="/index">How it works</a>
+                                <!-- <a class="nav-link click-scroll" href="/index">How it works</a> -->
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="/index">FAQs</a>
+                                <!-- <a class="nav-link click-scroll" href="/index">FAQs</a> -->
                             </li>
     
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="/index">Contact</a>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link click-scroll" href="/index">Contact</a> -->
                             </li>
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+                                <!-- <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a> -->
 
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                    <li><a class="dropdown-item active" href="/listing">Topics Listing</a></li>
+                                    <!-- <li><a class="dropdown-item active" href="/listing">Topics Listing</a></li> -->
 
-                                    <li><a class="dropdown-item" href="/contact">Contact Form</a></li>
+                                    <!-- <li><a class="dropdown-item" href="/contact">Contact Form</a></li> -->
                                 </ul>
                             </li>
                         </ul>
 
                         <div class="d-none d-lg-block">
-                            <a href="pass_home" class="navbar-icon bi-person smoothscroll"></a>
+                            <a href="/pass_home" class="navbar-icon bi-person smoothscroll"></a>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@ https://templatemo.com/tm-590-topic-listing
                                 </ol>
                             </nav>
 
-                            <h2 class="text-white">Select Destination</h2>
+                            <h2 class="text-white">Travel History</h2>
                         </div>
 
                     </div>
@@ -117,34 +117,36 @@ https://templatemo.com/tm-590-topic-listing
                     <div class="row">
 
                         <div class="col-lg-12 col-12 text-center">
-                            <h3 class="mb-4">Available Stops for Bus {{ bus.bus_number }}</h3>
+                            <h3 class="mb-4">Tickets Generated</h3>
                         </div>
 
-                            {% for r in routes %}
+                            {% for t in tickets %}
                             <div class="col-lg-8 col-12 mt-3 mx-auto">
                                 <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
                                     <div class="d-flex">
-                                        <img src="{{ bus.qr_code.url }}" class="custom-block-image img-fluid" alt="QR Code for {{ bus.bus_number }}">
-                                        
+                                        {% if t.qr_code %}
+                                        <img src="{{ t.qr_code.url }}" class="custom-block-image img-fluid mx-auto" alt="QR Code for {{ bus.bus_number }}">
+                                        {% endif %}
                                         <div class="custom-block-topics-listing-info d-flex mx-auto" >
                                             <div>
-                                                <h5 class="mb-2">{{ r.start_stop }} → {{ r.end_stop }}</h5>
+                                                <h5 class="mb-2">{{ t.route.start_stop }} → {{ t.route.end_stop }}</h5>
 
                                                 <p class="mb-0">
-                                                    Distance: {{ r.distance }} km <br>
-                                                    Fare per km: ₹{{ r.fare }} <br>
-                                                    Total Fare: ₹{{ r.total }}
+                                                    Ticket Number : {{ t.ticket_number }} <br>
+                                                    Bus Number : {{ t.bus.bus_number }}<br>
+                                                    Total Fare: ₹{{ t.fare }}<br>
+                                                    Generated At: {{ t.created_at }}<br>
+                                                    <!-- Passenger Name: {{ t.passenger.name }} -->
                                                 </p>
 
-                                                <a href="{% url 'generate_ticket' bus_id=bus.id route_id=r.id %}" 
-                                                class="btn custom-btn mt-3 mt-lg-4">Proceed</a>
+                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             {% empty %}
-                            <p class="text-center">No routes available for this bus.</p>
+                            <p class="text-center">You haven’t booked any tickets yet.</p>
                             {% endfor %}
 
 

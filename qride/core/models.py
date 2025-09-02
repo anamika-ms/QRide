@@ -2,6 +2,7 @@ from django.db import models
 from decimal import Decimal
 from io import BytesIO
 from django.core.files import File
+from datetime import datetime
 import qrcode
 
 
@@ -39,12 +40,17 @@ class bus(models.Model):
         super().save(*args, **kwargs)  # Save first to get ID
 
         if creating:  # Only generate QR when creating a new bus
-            qr_data = f"https://yourdomain.com/start-ride/?bus={self.id}"
+            qr_data = str(self.id)
             qr_img = qrcode.make(qr_data)
             qr_io = BytesIO()
             qr_img.save(qr_io, format='PNG')
-            self.qr_code.save(f"bus_{self.id}.png", File(qr_io), save=False)
+
+              
+            file_name = f"bus_{self.id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+
+            self.qr_code.save(file_name, File(qr_io), save=False)
             super().save(update_fields=['qr_code'])
+
 
     def __str__(self):
         return f"{self.bus_number} - {self.bus_route}"
@@ -77,3 +83,30 @@ class route(models.Model):
 
     def __str__(self):
         return f"{self.start_stop} → {self.end_stop} ({self.bus_number})"
+    
+
+class ticket(models.Model):
+    ticket_number = models.CharField(max_length=10, unique=True)
+    passenger = models.ForeignKey('registration', on_delete=models.CASCADE, limit_choices_to={'role__in': ['Passenger', 'Student']})
+    bus = models.ForeignKey('bus', on_delete=models.CASCADE)
+    route = models.ForeignKey('route', on_delete=models.CASCADE)
+    fare = models.DecimalField(max_digits=8, decimal_places=2)
+    qr_code = models.ImageField(upload_to='ticket_qrcodes/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        creating = self._state.adding
+
+        # Generate QR code only when creating
+        if creating and not self.qr_code:
+            qr_data = f"Ticket:{self.ticket_number}|Bus:{self.bus.bus_number}|Route:{self.route.start_stop}->{self.route.end_stop}"
+            qr_img = qrcode.make(qr_data)
+            qr_io = BytesIO()
+            qr_img.save(qr_io, format='PNG')
+            file_name = f"ticket_{self.ticket_number}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+            self.qr_code.save(file_name, File(qr_io), save=False)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.ticket_number} - {self.passenger.name}"

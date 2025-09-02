@@ -1,0 +1,14 @@
+<h2>Ticket Generated!</h2>
+<p><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</p>
+<p><strong>Bus:</strong> {{ ticket.bus.bus_number }}</p>
+<p><strong>Route:</strong> {{ ticket.route.start_stop }} → {{ ticket.route.end_stop }}</p>
+<p><strong>Passenger:</strong> {{ ticket.passenger.name }}</p>
+<p><strong>Fare:</strong> ₹{{ ticket.fare }}</p>
+{% if ticket.qr_code %}
+<img src="{{ ticket.qr_code.url }}" alt="Ticket QR Code" width="200">
+{% endif %}
+
+<!-- Dummy payment button -->
+<form action="#">
+    <button type="submit">Proceed to Payment</button>
+</form>

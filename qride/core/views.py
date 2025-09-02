@@ -1,8 +1,13 @@
 from django.shortcuts import render,redirect
-from . models import registration, bus, route
+from . models import registration, bus, route, ticket
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+import random
+import string
+
 
 def index(request):
     return render(request, 'index.html')
@@ -184,3 +189,83 @@ def add_route(request):
 def view_routes(request):
     routes = route.objects.all().order_by('-created_at')  # Latest first
     return render(request, 'view_routes.html', {'routes': routes})
+
+# Select Destination (Passenger)
+
+def select_destination(request):
+    bus_id = request.GET.get('bus_id')
+    if not bus_id:
+        return HttpResponse("Bus ID not provided", status=400)
+
+    # bus_id is now numeric
+    bus_obj = get_object_or_404(bus, id=bus_id)
+    routes = route.objects.filter(bus=bus_obj)
+    return render(request, 'select_destination.html', {
+        'bus': bus_obj,
+        'routes': routes
+    })
+
+
+def generate_ticket(request, bus_id, route_id):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, "Please login first.")
+        return redirect('login')
+
+    passenger = get_object_or_404(registration, id=user_id)
+
+    selected_bus = get_object_or_404(bus, id=bus_id)
+    selected_route = get_object_or_404(route, id=route_id)
+
+    ticket_number = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+
+    new_ticket = ticket.objects.create(
+        passenger=passenger,
+        bus=selected_bus,
+        route=selected_route,
+        fare=selected_route.total,
+        ticket_number=ticket_number
+    )
+
+    return render(request, 'ticket.html', {'ticket': new_ticket})
+
+def operator_tickets(request):
+    # Ensure user is logged in
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, "Please login first.")
+        return redirect('login')
+
+    user = get_object_or_404(registration, id=user_id)
+
+    # Allow only operators
+    if user.role != 'Operator':
+        messages.error(request, "Access denied! Only operators can view tickets.")
+        return redirect('index')
+
+    # Get all buses of this operator
+    operator_buses = bus.objects.filter(operator=user)
+
+    # Get all tickets for these buses
+    tickets = ticket.objects.filter(bus__in=operator_buses).order_by('-created_at')
+
+    return render(request, 'operator_tickets.html', {'tickets': tickets})
+
+def travel_history(request):
+    # Ensure user is logged in
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, "Please login first.")
+        return redirect('login')
+
+    passenger = get_object_or_404(registration, id=user_id)
+
+    # Only allow passengers and students
+    if passenger.role not in ['Passenger', 'Student']:
+        messages.error(request, "Access denied! Only passengers or students can view travel history.")
+        return redirect('index')
+
+    # Get all tickets for this passenger
+    tickets = ticket.objects.filter(passenger=passenger).order_by('-created_at')
+
+    return render(request, 'travel_history.html', {'tickets': tickets})

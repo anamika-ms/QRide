@@ -23,6 +23,11 @@ urlpatterns = [
     path('add_route/', views.add_route, name='add_route'),
     path('view_routes/', views.view_routes, name='view_routes'),
 
+    path('select-destination/', views.select_destination, name='select_destination'),
+    path('generate-ticket/<int:bus_id>/<int:route_id>/', views.generate_ticket, name='generate_ticket'),
+    path('operator-tickets/', views.operator_tickets, name='operator_tickets'),
+    path('travel_history/', views.travel_history, name='travel_history'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
