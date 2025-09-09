@@ -72,13 +72,17 @@ https://templatemo.com/tm-590-topic-listing
                                 <a class="nav-link click-scroll" href="/operator-tickets">Tickets</a>
                             </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="/index">Logout</a>
+                            </li>
+
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+                                <!-- <a class="nav-link dropdown-toggle" href="#section_5" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pages</a> -->
 
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="/listing">Topics Listing</a></li>
+                                    <!-- <li><a class="dropdown-item" href="/listing">Topics Listing</a></li> -->
 
-                                    <li><a class="dropdown-item" href="/contact">Contact Form</a></li>
+                                    <!-- <li><a class="dropdown-item" href="/contact">Contact Form</a></li> -->
                                 </ul>
                             </li>
                         </ul>
@@ -98,36 +102,39 @@ https://templatemo.com/tm-590-topic-listing
                         <div class="col-lg-5 col-12 mb-5">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/index">Homepage</a></li>
+                                    <!-- <li class="breadcrumb-item"><a href="/index">Homepage</a></li> -->
 
-                                    <li class="breadcrumb-item active" aria-current="page">Web Design</li>
+                                    <!-- <li class="breadcrumb-item active" aria-current="page">Web Design</li> -->
                                 </ol>
                             </nav>
 
-                            <h2 class="text-white">Introduction to <br> Web Design 101</h2>
+                            <h2 class="text-white">Manage your Buses, Routes, and Tickets with ease...</h2>
 
                             <div class="d-flex align-items-center mt-5">
-                                <a href="#topics-detail" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+                                <a href="/operator-tickets" class="btn custom-btn custom-border-btn smoothscroll me-4 ">Get Started</a>
 
-                                <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                                <!-- <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a> -->
                             </div>
                         </div>
 
                         <div class="col-lg-5 col-12">
                             <div class="topics-detail-block bg-white shadow-lg">
-                                {% for bus in buses %}
-                                <tr><center>
-                                    <td>
-                                        {% if bus.qr_code %}
-                                        <img src="{{ bus.qr_code.url }}" class="topics-detail-block-image img-fluid">
-                                        {% else %}
-                                            No QR generated
-                                        {% endif %}
-                                    </td>
-                                    <td>Bus Number : {{ bus.bus_number }}</td><br>
-                                    <td>Bus Route : {{ bus.bus_route }}</td></center><br>
-                                </tr>
-                                {% endfor %}
+                                {% if buses %}
+                                    {% for bus in buses %}
+                                        <center>
+                                            {% if bus.qr_code %}
+                                                <img src="{{ bus.qr_code.url }}" class="topics-detail-block-image img-fluid">
+                                            {% else %}
+                                                No QR generated !
+                                            {% endif %}
+                                            <p>Bus Number : {{ bus.bus_number }}</p>
+                                            <p>Bus Route : {{ bus.bus_route }}</p>
+                                        </center>
+                                    {% endfor %}
+                                {% else %}
+                                    <!-- Show default image when no buses are added -->
+                                    <img src="{% static 'images/bus7.png' %}" class="topics-detail-block-image img-fluid">
+                                {% endif %}
                             </div>
                         </div>
 
@@ -139,29 +146,29 @@ https://templatemo.com/tm-590-topic-listing
             <section class="topics-detail-section section-padding" id="topics-detail">
                 <div class="container">
                     <div class="row">
-
+                        
                         <div class="col-lg-8 col-12 m-auto">
-                            <h3 class="mb-4">Introduction to Web Design</h3>
+                            <h3 class="mb-4">Welcome to Operator Dashboard</h3>
 
-                            <p>So how can you stand out, do something unique and interesting, build an online business, and get paid enough to change life. Please visit TemplateMo website to download free website templates.</p>
+                            <p>This dashboard is designed to help bus operators manage their services with ease. From registering buses to creating routes and issuing tickets, everything you need is available in one place. Your role ensures a smooth and digital travel experience for passengers.</p>
 
-                            <p><strong>There are so many ways to make money online</strong>. Below are several platforms you can use to find success. Keep in mind that there is no one path everyone can take. If that were the case, everyone would have a million dollars.</p>
+                            <p>You can view quick statistics, track daily ticket sales, and update route information whenever required. Keeping your data accurate helps in better fare collection and a seamless experience for travelers.</p>
 
                             <blockquote>
-                                Freelancing your skills isn’t going to make you a millionaire overnight.
+                                Efficient management keeps passengers happy and buses running smoothly.
                             </blockquote>
 
                             <div class="row my-4">
                                 <div class="col-lg-6 col-md-6 col-12">
-                                    <img src="{% static 'images/businesswoman-using-tablet-analysis.jpg' %}" class="topics-detail-block-image img-fluid">
+                                    <img src="{% static 'images/bus3.png' %}" class="topics-detail-block-image img-fluid">
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-12 mt-4 mt-lg-0 mt-md-0">
-                                    <img src="{% static 'images/colleagues-working-cozy-office-medium-shot.jpg' %}" class="topics-detail-block-image img-fluid">
+                                    <img src="{% static 'images/bus8.jpg' %}" class="topics-detail-block-image img-fluid">
                                 </div>
                             </div>
 
-                            <p>Most people start with freelancing skills they already have as a side hustle to build up income. This extra cash can be used for a vacation, to boost up savings, investing, build business.</p>
+                            <p>Experience hassle-free travel with our QR-based bus fare automation portal. Simply book your ticket, scan the QR and enjoy a smooth, cashless journey without waiting in queues.</p>
                         </div>
 
                     </div>
@@ -174,17 +181,17 @@ https://templatemo.com/tm-590-topic-listing
                     <div class="row justify-content-center">
 
                         <div class="col-lg-5 col-12">
-                            <img src="{% static 'images/rear-view-young-college-student.jpg' %}" class="newsletter-image img-fluid" alt="">
+                            <img src="{% static 'images/bus7.png' %}" class="newsletter-image img-fluid" alt="">
                         </div>
 
                         <div class="col-lg-5 col-12 subscribe-form-wrap d-flex justify-content-center align-items-center">
                             <form class="custom-form subscribe-form" action="#" method="post" role="form">
-                                <h4 class="mb-4 pb-2">Get Newsletter</h4>
+                                <h4 class="mb-4 pb-2"><center>FEEDBACK</center></h4>
 
-                                <input type="email" name="subscribe-email" id="subscribe-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email Address" required="">
+                                <input type="text" name="subscribe-email" id="subscribe-email"  class="form-control" placeholder="How was your experience with QRide" required="">
 
                                 <div class="col-lg-12 col-12">
-                                    <button type="submit" class="form-control">Subscribe</button>
+                                    <button type="submit" class="form-control">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -201,7 +208,7 @@ https://templatemo.com/tm-590-topic-listing
                     <div class="col-lg-3 col-12 mb-4 pb-2">
                         <a class="navbar-brand mb-2" href="/index">
                             <i class="bi-back"></i>
-                            <span>Topic</span>
+                            <span>QRide</span>
                         </a>
                     </div>
 
@@ -210,20 +217,17 @@ https://templatemo.com/tm-590-topic-listing
 
                         <ul class="site-footer-links">
                             <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">Home</a>
+                                <a href="#section_1" class="site-footer-link">Home</a>
+                            </li>
+
+                             <li class="site-footer-link-item">
+                                <a href="#section_2" class="site-footer-link">Browse Topics</a>
                             </li>
 
                             <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">How it works</a>
+                                <a href="#section_3" class="site-footer-link">How it works</a>
                             </li>
-
-                            <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">FAQs</a>
-                            </li>
-
-                            <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">Contact</a>
-                            </li>
+                            
                         </ul>
                     </div>
 
@@ -232,13 +236,13 @@ https://templatemo.com/tm-590-topic-listing
 
                         <p class="text-white d-flex mb-1">
                             <a href="tel: 305-240-9671" class="site-footer-link">
-                                305-240-9671
+                                +91 7510903533
                             </a>
                         </p>
 
                         <p class="text-white d-flex">
-                            <a href="mailto:info@company.com" class="site-footer-link">
-                                info@company.com
+                            <a href="mailto:anamikams2003@gmail.com" class="site-footer-link">
+                                anamikams2003@gmail.com
                             </a>
                         </p>
                     </div>
@@ -249,16 +253,16 @@ https://templatemo.com/tm-590-topic-listing
                             English</button>
 
                             <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" type="button">Thai</button></li>
+                                <li><button class="dropdown-item" type="button">Malayalam</button></li>
 
-                                <li><button class="dropdown-item" type="button">Myanmar</button></li>
+                                <!-- <li><button class="dropdown-item" type="button">Myanmar</button></li> -->
 
-                                <li><button class="dropdown-item" type="button">Arabic</button></li>
+                                <!-- <li><button class="dropdown-item" type="button">Arabic</button></li> -->
                             </ul>
                         </div>
-
-                        <p class="copyright-text mt-lg-5 mt-4">Copyright © 2048 Topic Listing Center. All rights reserved.
-                        <br><br>Design: <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a></p>
+                        
+                        <p class="copyright-text mt-lg-5 mt-4">Copyright © 2025 QRide.<br> All rights reserved.
+                        <!-- <br><br>Design: <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a></p> -->
                         
                     </div>
 

@@ -20,6 +20,7 @@ class registration(models.Model):
     password = models.CharField(max_length=128)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return f"{self.name} ({self.role})"
@@ -85,6 +86,7 @@ class route(models.Model):
         return f"{self.start_stop} → {self.end_stop} ({self.bus_number})"
     
 
+# Ticket Details DB
 class ticket(models.Model):
     ticket_number = models.CharField(max_length=10, unique=True)
     passenger = models.ForeignKey('registration', on_delete=models.CASCADE, limit_choices_to={'role__in': ['Passenger', 'Student']})
@@ -110,3 +112,5 @@ class ticket(models.Model):
 
     def __str__(self):
         return f"{self.ticket_number} - {self.passenger.name}"
+    
+
