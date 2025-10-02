@@ -1,10 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import registration, bus, route, ticket
+from .models import registration, bus, route, ticket,payment
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
 from django.http import HttpResponse
 import random
 import string
+from django.conf import settings
+from io import BytesIO
+import io
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import cm
+from reportlab.pdfgen import canvas
+import razorpay
 
 
 def index(request):
@@ -193,6 +200,7 @@ def select_destination(request):
 
 # Ticket Generation
 def generate_ticket(request, bus_id, route_id):
+    # Check if user is logged in
     user_id = request.session.get('user_id')
     if not user_id:
         messages.error(request, "Please login first.")
@@ -203,8 +211,10 @@ def generate_ticket(request, bus_id, route_id):
     selected_route = get_object_or_404(route, id=route_id)
     fare_amount = selected_route.total
 
-    # Create a ticket directly
+    # Generate random ticket number
     ticket_number = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+
+    # Create ticket
     new_ticket = ticket.objects.create(
         passenger=passenger,
         bus=selected_bus,
@@ -212,6 +222,16 @@ def generate_ticket(request, bus_id, route_id):
         fare=fare_amount,
         ticket_number=ticket_number
     )
+
+    # Create corresponding pending payment
+    payment.objects.create(
+        ticket=new_ticket,
+        amount=fare_amount,
+        status="pending"
+    )
+
+    # Store ticket id in session to use for payment
+    request.session['current_ticket_id'] = new_ticket.id
 
     return render(request, 'ticket.html', {'ticket': new_ticket})
 
@@ -251,3 +271,126 @@ def travel_history(request):
     tickets = ticket.objects.filter(passenger=passenger).order_by('-created_at')
     return render(request, 'travel_history.html', {'tickets': tickets})
 
+
+def view_ticket(request, ticket_id):
+    ticket_obj = get_object_or_404(ticket, id=ticket_id)
+    return render(request, 'ticket.html', {'ticket': ticket_obj})
+
+
+
+def initiate_payment(request, ticket_id):
+    t = get_object_or_404(ticket, id=ticket_id)
+
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    amount_paise = int(t.fare * 100)  # Razorpay amount in paise
+
+    # Create an order
+    razorpay_order = client.order.create({
+        'amount': amount_paise,
+        'currency': 'INR',
+        'payment_capture': '1'
+    })
+
+    # --- Debug print ---
+    print("Razorpay Order Created:", razorpay_order)
+    print("Amount in paise:", amount_paise)
+    print("Ticket ID:", t.id)
+
+    # Save order id in payment record
+    pay_obj = t.payment
+    pay_obj.transaction_id = razorpay_order['id']
+    pay_obj.status = 'pending'
+    pay_obj.save()
+
+    context = {
+        'ticket': t,
+        'razorpay_order_id': razorpay_order['id'],
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+        'amount': amount_paise,
+        'currency': 'INR'
+    }
+    return render(request, 'razorpay_payment.html', context)
+
+
+
+def payment_success(request, ticket_id):
+    t = get_object_or_404(ticket, id=ticket_id)
+    payment_id = request.GET.get('payment_id')
+
+    # Update payment record
+    pay_obj = t.payment
+    pay_obj.transaction_id = payment_id
+    pay_obj.status = 'success'
+    pay_obj.save()
+
+    return redirect('generate_ticket', bus_id=t.bus.id, route_id=t.route.id)
+
+
+def download_ticket(request, ticket_id):
+    t = get_object_or_404(ticket, id=ticket_id)
+
+    # Create a PDF in memory
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, 800, "QRide Bus Ticket")
+    
+    p.setFont("Helvetica", 12)
+    p.drawString(50, 760, f"Ticket Number: {t.ticket_number}")
+    p.drawString(50, 740, f"Bus Number: {t.bus.bus_number}")
+    p.drawString(50, 720, f"Route: {t.route.start_stop} → {t.route.end_stop}")
+    p.drawString(50, 700, f"Passenger: {t.passenger.name}")
+    p.drawString(50, 680, f"Fare: {t.fare}/-")
+    
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    # Return PDF as response
+    return HttpResponse(buffer, content_type='application/pdf', headers={
+        'Content-Disposition': f'attachment; filename=ticket_{t.ticket_number}.pdf'
+    })
+
+
+def operator_bus_report(request, bus_id):
+    bus_obj = get_object_or_404(bus, id=bus_id)
+    tickets = ticket.objects.filter(bus=bus_obj)
+
+    # PDF generation
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    y = height - 50
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(150, y, f"Tickets Report for Bus {bus_obj.bus_number}")
+    y -= 40
+
+    total_earned = 0
+    p.setFont("Helvetica", 12)
+
+    for t in tickets:
+        payment = getattr(t, 'payment', None)  # safely get payment, returns None if doesn't exist
+        status = "Paid" if payment and payment.status == "success" else "Pending"
+        total_earned += t.fare if status == "Paid" else 0
+
+        text = f"Ticket: {t.ticket_number} | Passenger: {t.passenger.name} | Fare: {t.fare}/- | Status: {status}"
+        p.drawString(50, y, text)
+        y -= 20
+
+        if y < 50:  # New page if space runs out
+            p.showPage()
+            y = height - 50
+            p.setFont("Helvetica", 12)
+
+    # Total money collected
+    p.drawString(50, y-20, f"Total Money Collected: {total_earned}/-")
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Bus_{bus_obj.bus_number}_Tickets.pdf"'
+    return response

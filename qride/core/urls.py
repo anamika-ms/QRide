@@ -28,6 +28,15 @@ urlpatterns = [
     path('operator-tickets/', views.operator_tickets, name='operator_tickets'),
     path('travel_history/', views.travel_history, name='travel_history'),
 
+    path('view-ticket/<int:ticket_id>/', views.view_ticket, name='view_ticket'),
+
+    path('pay/<int:ticket_id>/', views.initiate_payment, name='initiate_payment'),
+    path('payment-success/<int:ticket_id>/', views.payment_success, name='payment_success'),
+
+    path('download-ticket/<int:ticket_id>/', views.download_ticket, name='download_ticket'),
+    path('operator/bus-report/<int:bus_id>/', views.operator_bus_report, name='operator_bus_report'),
+
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

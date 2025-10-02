@@ -113,4 +113,23 @@ class ticket(models.Model):
     def __str__(self):
         return f"{self.ticket_number} - {self.passenger.name}"
     
+    
+# Payment Details DB
+class payment(models.Model):
+    ticket = models.OneToOneField('ticket', on_delete=models.CASCADE, related_name="payment")
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("pending", "Pending"),
+            ("success", "Success"),
+            ("failed", "Failed"),
+        ],
+        default="pending"
+    )
+    transaction_id = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment for {self.ticket.ticket_number} - {self.status}"
 

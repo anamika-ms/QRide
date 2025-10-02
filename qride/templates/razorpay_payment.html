@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Pay Now</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Pay ₹{{ ticket.fare }}</h2>
+    <button id="rzp-button">Pay Now</button>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key_id }}",
+            "amount": "{{ amount }}",
+            "currency": "{{ currency }}",
+            "name": "QRide",
+            "description": "Bus Ticket Payment",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response){
+                window.location.href = "{% url 'payment_success' ticket.id %}?payment_id=" + response.razorpay_payment_id;
+            },
+            "theme": {"color": "#3399cc"}
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

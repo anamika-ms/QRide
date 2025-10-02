@@ -72,6 +72,8 @@ https://templatemo.com/tm-590-topic-listing
                                 <a class="nav-link click-scroll" href="/operator-tickets">Tickets</a>
                             </li>
 
+                            
+
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="/index">Logout</a>
                             </li>
@@ -111,8 +113,9 @@ https://templatemo.com/tm-590-topic-listing
                             <h2 class="text-white">Manage your Buses, Routes, and Tickets with ease...</h2>
 
                             <div class="d-flex align-items-center mt-5">
-                                <a href="/operator-tickets" class="btn custom-btn custom-border-btn smoothscroll me-4 ">Get Started</a>
-
+                                {% for bus in buses %}
+                                <a href="{% url 'operator_bus_report' bus.id %}" class="btn custom-btn custom-border-btn smoothscroll me-4 ">⬇️ Download Report</a>
+                                {% endfor %}
                                 <!-- <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a> -->
                             </div>
                         </div>

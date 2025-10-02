@@ -1,14 +1,121 @@
-<h2>Ticket Generated!</h2>
-<p><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</p>
-<p><strong>Bus:</strong> {{ ticket.bus.bus_number }}</p>
-<p><strong>Route:</strong> {{ ticket.route.start_stop }} → {{ ticket.route.end_stop }}</p>
-<p><strong>Passenger:</strong> {{ ticket.passenger.name }}</p>
-<p><strong>Fare:</strong> ₹{{ ticket.fare }}</p>
-{% if ticket.qr_code %}
-<img src="{{ ticket.qr_code.url }}" alt="Ticket QR Code" width="200">
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Ticket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .ticket {
+            background: #fff;
+            border: 2px dashed #333;
+            width: 400px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .ticket h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .ticket p {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+        .ticket strong {
+            color: #000;
+        }
+        .ticket img {
+            display: block;
+            margin: 20px auto;
+        }
+        .payment-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #3399cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .payment-btn:hover {
+            background: #287aa0;
+        }
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #1e8449;
+        }
+        .perforation {
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            width: 20px;
+            height: 20px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+        .perforation.right {
+            left: auto;
+            right: -10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <div class="perforation"></div>
+        <div class="perforation right"></div>
 
-<!-- Dummy payment button -->
-<form action="#">
-    <button type="submit">Proceed to Payment</button>
-</form>
+        <h2>🎟️ Ticket Generated!</h2>
+
+        <p><strong>Ticket Number:</strong> {{ ticket.ticket_number }}</p>
+        <p><strong>Bus:</strong> {{ ticket.bus.bus_number }}</p>
+        <p><strong>Route:</strong> {{ ticket.route.start_stop }} → {{ ticket.route.end_stop }}</p>
+        <p><strong>Passenger:</strong> {{ ticket.passenger.name }}</p>
+        <p><strong>Fare:</strong> ₹{{ ticket.fare }}</p>
+
+        {% if ticket.qr_code %}
+            <img src="{{ ticket.qr_code.url }}" alt="Ticket QR Code" width="200">
+        {% endif %}
+
+        {% if ticket.payment.status != "success" %}
+            <!--  Pay Now Button for testing -->
+            <form action="{% url 'initiate_payment' ticket.id %}" method="get">
+                <button type="submit" class="payment-btn">Pay Now</button>
+            </form>
+        {% else %}
+            <!-- Download Button only if paid -->
+            <form action="{% url 'download_ticket' ticket.id %}" method="get">
+                <button type="submit" class="download-btn">⬇️ Download Ticket</button>
+            </form>
+
+        {% endif %}
+
+    </div>
+</body>
+</html>
